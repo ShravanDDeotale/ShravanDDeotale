@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# rembg model cache (downloaded on first portrait run, ~176 MB)
+~/.u2net/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local photo — never commit your source photo
+photo.png
+photo.jpg
+photo.jpeg
+*.orig.png
