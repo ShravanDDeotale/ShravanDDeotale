@@ -21,9 +21,17 @@ projects while learning and exploring different areas of software development.
 
 <img src="./hd-stack.svg" width="620" alt="stack"/>
 
-<samp>javascript &nbsp; typescript &nbsp; python &nbsp; discord.js &nbsp; node.js &nbsp; git &nbsp; html &nbsp; css</samp>
+<samp>javascript &nbsp; typescript &nbsp; python &nbsp; discord.js &nbsp; node.js &nbsp; electron &nbsp; git &nbsp; html &nbsp; css</samp>
 
 <img src="./hd-projects.svg" width="620" alt="projects"/>
+
+**[Self__bot](https://github.com/ShravanDDeotale/Self__bot)** &nbsp;·&nbsp; <samp>javascript · electron</samp><br>
+A powerful Discord selfbot control unit and web dashboard featuring Lavalink v4<br>
+audio streaming, multi-token management, and automated captcha solving.
+
+**[Discord_token_humanizer](https://github.com/ShravanDDeotale/Discord_token_humanizer)** &nbsp;·&nbsp; <samp>python</samp><br>
+A standalone Discord profile customizer and humanizer featuring stealth WebSocket<br>
+emulation, automated profile styling, and proxy rotation.
 
 **[COLLAB-CODING-AND-CHATING-APP](https://github.com/ShravanDDeotale/COLLAB-CODING-AND-CHATING-APP)** &nbsp;·&nbsp; <samp>javascript</samp><br>
 A collaborative coding and chatting application for working and<br>
@@ -34,13 +42,14 @@ A Python-based YouTube analysis project for exploring video and channel<br>
 data with a developer-focused workflow.
 
 **[Fizyy-Music](https://github.com/ShravanDDeotale/Fizyy-Music)** &nbsp;·&nbsp; <samp>typescript</samp><br>
-A TypeScript music project focused on building a modern music experience.
+A TypeScript music bot focused on building a modern, high-fidelity<br>
+audio streaming experience.
 
 **[Love-Music](https://github.com/ShravanDDeotale/Love-Music)** &nbsp;·&nbsp; <samp>javascript</samp><br>
-A JavaScript-based music project from my open-source work.
+A multi-guild sharded JavaScript music bot from my open-source work.
 
 **[Token-Gen-DC](https://github.com/ShravanDDeotale/Token-Gen-DC)** &nbsp;·&nbsp; <samp>python</samp><br>
-A Python Discord-related project from my collection of experiments and tools.
+A Python Discord automation project from my collection of experiments and tools.
 
 <img src="./hd-stats.svg" width="620" alt="stats"/>
 
