@@ -86,7 +86,7 @@ def window():
     return (f"{start.isoformat()}T00:00:00Z", f"{today.isoformat()}T23:59:59Z")
 
 
-def fetch(login, token):
+def fetch_graphql(login, token):
     since, until = window()
     body = json.dumps({"query": QUERY,
                        "variables": {"login": login,
@@ -104,6 +104,86 @@ def fetch(login, token):
     if not user:
         raise SystemExit(f"no such user: {login}")
     return user
+
+
+def fetch_public(login):
+    req_cal = urllib.request.Request(
+        f"https://github-contributions-api.jogruber.de/v4/{login}?y=last",
+        headers={"User-Agent": f"{login}-profile-stats"}
+    )
+    try:
+        with urllib.request.urlopen(req_cal, timeout=30) as r:
+            cal_data = json.load(r)
+    except Exception as e:
+        raise SystemExit(f"Failed to fetch contributions: {e}")
+
+    days_data = cal_data.get("contributions", [])
+    today = datetime.now(timezone.utc).date()
+    start_date = today - timedelta(days=364)
+    filtered_days = [d for d in days_data if d["date"] >= start_date.isoformat() and d["date"] <= today.isoformat()]
+
+    weeks = []
+    current_week = []
+    for d in filtered_days:
+        d_obj = date.fromisoformat(d["date"])
+        w_day = (d_obj.weekday() + 1) % 7
+        if w_day == 0 and current_week:
+            weeks.append({"contributionDays": current_week})
+            current_week = []
+        current_week.append({
+            "contributionCount": d["count"],
+            "date": d["date"],
+            "weekday": w_day
+        })
+    if current_week:
+        weeks.append({"contributionDays": current_week})
+
+    total_contributions = sum(d["count"] for d in filtered_days)
+
+    req_repos = urllib.request.Request(
+        f"https://api.github.com/users/{login}/repos?per_page=100",
+        headers={"User-Agent": f"{login}-profile-stats"}
+    )
+    try:
+        with urllib.request.urlopen(req_repos, timeout=30) as r:
+            repos = json.load(r)
+    except Exception as e:
+        raise SystemExit(f"Failed to fetch repos: {e}")
+
+    nodes = []
+    for r in repos:
+        if r.get("fork"):
+            continue
+        try:
+            l_req = urllib.request.Request(
+                r["languages_url"],
+                headers={"User-Agent": f"{login}-profile-stats"}
+            )
+            with urllib.request.urlopen(l_req, timeout=30) as lr:
+                langs = json.load(lr)
+            edges = [{"size": size, "node": {"name": name}}
+                     for name, size in sorted(langs.items(), key=lambda x: -x[1])[:12]]
+            nodes.append({"languages": {"edges": edges}})
+        except Exception:
+            continue
+
+    return {
+        "contributionsCollection": {
+            "contributionCalendar": {
+                "totalContributions": total_contributions,
+                "weeks": weeks
+            }
+        },
+        "repositories": {
+            "nodes": nodes
+        }
+    }
+
+
+def fetch(login, token=None):
+    if token:
+        return fetch_graphql(login, token)
+    return fetch_public(login)
 
 
 def pretty(iso):
@@ -409,11 +489,6 @@ def write(path, svg):
 
 def main():
     token = os.environ.get("GITHUB_TOKEN")
-    if not token:
-        sys.exit("GITHUB_TOKEN is not set")
-
-    # Safe fallback for Shravan's profile. The Action normally overrides this
-    # with github.repository_owner.
     login = os.environ.get("GH_LOGIN", "ShravanDDeotale")
     out_dir = os.environ.get("OUT_DIR", ".")
 
